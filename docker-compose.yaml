@@ -1,0 +1,49 @@
+version: '2'
+networks:
+  sonarqube-network:
+    name: sonarqube-network
+volumes:
+  postgres-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: data
+
+services:
+  sonarqube:
+    image: sonarqube:10.0.0-community
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    networks:
+      - sonarqube-network
+    depends_on:
+      - postgresql
+    env_file: ./.env
+    restart: unless-stopped
+  postgresql:
+    image: bitnami/postgresql:15
+    env_file: ./.env
+    networks:
+      - sonarqube-network
+    volumes:
+      - postgres-data:/bitnami/postgresql
+    restart: unless-stopped
+
+  sonarqube-post-install:
+    image: python:3.12.0rc2-alpine3.18
+    env_file: ./.env
+    environment:
+      - SONARQUBE_NAME=sonarqube
+    depends_on:
+      - sonarqube
+    volumes:
+    - ./sonarqube-post-install/index.py:/index.py
+    - ./sonarqube-post-install/requirements.txt:/requirements.txt
+    - ./sonarqube-post-install/config.json:/config.json
+    entrypoint: >
+      sh -c "sleep 120000 && pip install -r requirements.txt && python3 index.py"
+    networks:
+      - sonarqube-network
+    restart: no

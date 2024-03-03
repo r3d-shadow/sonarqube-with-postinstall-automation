@@ -1,0 +1,10 @@
+{
+    "projects": [
+        "test"
+    ],
+    "quality_gate": {
+        "name": "test",
+        "duplicated_lines_density_threshold": 8,
+        "coverage_threshold": 70
+    }
+}
