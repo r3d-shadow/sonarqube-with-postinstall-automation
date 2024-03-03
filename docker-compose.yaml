@@ -42,6 +42,7 @@ services:
     - ./sonarqube-post-install/index.py:/index.py
     - ./sonarqube-post-install/requirements.txt:/requirements.txt
     - ./sonarqube-post-install/config.json:/config.json
+    - ./sonarqube-post-install/out.json:/out.json
     entrypoint: >
       sh -c "sleep 120000 && pip install -r requirements.txt && python3 index.py"
     networks:

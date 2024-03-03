@@ -13,7 +13,7 @@ sonarqube_url = f'http://{sonarqube_name}:9000{sonarqube_path}'
 admin_username = 'admin'
 admin_password = os.getenv('SONARQUBE_CURRENT_PASSWORD')
 new_password = os.getenv('SONARQUBE_NEW_PASSWORD')
-
+generated_tokens = {}
 session = requests.Session()
 proxies = {
     'http': 'http://localhost:8080',
@@ -93,7 +93,8 @@ def token_generation(token_name, projectKey):
 
     if token_generation_response.status_code == 200:
         token = token_generation_response.json()
-        print(f'Token generated successfully: {token}')
+        generated_tokens[token_name] = token['token']
+        print(f'Token generated successfully')
     else:
         print(f'Failed to generate token. Status code: {token_generation_response.status_code}')
 
@@ -173,6 +174,9 @@ for project in config['projects']:
     create_project(project)
     token_deletion(project)
     token_generation(project, project)
+
+with open('out.json', 'w') as json_file:
+    json.dump(generated_tokens, json_file, indent=4)
 
 quality_gate_name = config['quality_gate']['name']
 coverage_threshold = config['quality_gate']['coverage_threshold']
