@@ -12,7 +12,7 @@ volumes:
 
 services:
   sonarqube:
-    image: sonarqube:10.0.0-community
+    image: sonarqube:10.4.1-community
     container_name: sonarqube
     ports:
       - "9000:9000"
@@ -44,7 +44,7 @@ services:
     - ./sonarqube-post-install/config.json:/config.json
     - ./sonarqube-post-install/out.json:/out.json
     entrypoint: >
-      sh -c "sleep 120 && pip install -r requirements.txt && python3 index.py"
+      sh -c "sleep 240 && pip install -r requirements.txt && python3 index.py"
     networks:
       - sonarqube-network
     restart: no

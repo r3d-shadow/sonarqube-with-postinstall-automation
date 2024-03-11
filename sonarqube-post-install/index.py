@@ -26,14 +26,18 @@ token_expiration_date = (current_date + datetime.timedelta(days=3*30)).strftime(
 
 
 def change_password():
-    api_endpoint = f'{sonarqube_url}/api/users/change_password?login={admin_username}&previousPassword={admin_password}&password={new_password}'
+    api_endpoint = f'{sonarqube_url}/api/users/change_password'
+    payload = {
+        'login': admin_username,
+        'previousPassword': admin_password,
+        'password': new_password
+    }
 
-    response = requests.post(api_endpoint, auth=(admin_username, admin_password))
+    response = requests.post(api_endpoint, data=payload, auth=(admin_username, admin_password))
     if response.status_code == 204:
         print('Admin password changed successfully!')
     else:
         print(f'Failed to change admin password. Status code: {response.status_code}')
-
 
 def login():
     api_endpoint = f'{sonarqube_url}/api/authentication/login'
