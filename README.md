@@ -24,3 +24,6 @@ Upon running the Docker Compose setup, the `index.py` script will perform the fo
 - Create projects specified in `config.json`
 - Generate new tokens for the projects.
 - Set up a quality gate with specified thresholds
+
+## CLI
+docker run --rm -it -v $PWD:/work -w /work sonarsource/sonar-scanner-cli:latest bash
